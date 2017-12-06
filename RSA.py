@@ -81,9 +81,10 @@ def make_key_set(digits):
     print key1,key2
     n = modulus(key1,key2)
     e = get_e(key1,key2)
+    #e = 7
     tot = totient(key1,key2)
     d = invereMod(e,tot)
-
+    print "D: ",d
     return (e,n), (d,n)
 
 #Given the public key, the function encrypts the value
@@ -92,20 +93,31 @@ def encrypt(value, e,n):
 
 #Given the private key and modulus, it decrypts the value
 def decrypt(value,d,n):
-    print value ** d
+    #print value ** d
     return (value**d) % n
 
 
 def main():
+    M = 8
     pub, pri = make_key_set(3)
-    print pub, pri
-    #C = encrypt(9,17,33)
-    #print C, decrypt(C,13,33)
+    C = encrypt(8,pub[0],pub[1])
+    D = decrypt(C,pri[0],pri[1])
+    print D
+     #print C, decrypt(C,13,33)
 
+
+    #C = encrypt(5,17,77)
+    #print C
+    #D = decrypt(C,53,77)
+    #print D
+
+
+    '''
     C = encrypt(2,pub[0],pub[1])
     print C
     D = decrypt(C,pri[0],pri[1])
     print 2, D
+    '''
 
     #print is_coprime(get_factors(21),get_factors(28))
 
