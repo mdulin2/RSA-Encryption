@@ -2,15 +2,10 @@ import math
 import random
 
 #Returns true if the number is prime, false otherwise
-def is_prime(num):
-    if num & 1 == 0:
-        return False
-
-
-    for i in xrange(3,int(math.ceil(math.sqrt(num))+1),2):
-        if(num % i == 0):
-            return False
-    return True
+def is_prime_max(num):
+    if is_prime(num):
+        return True
+    return False
 
 #Returns the largest value for a prime number that we want
 def get_max(digit):
@@ -22,12 +17,12 @@ def get_max(digit):
 #Gets two prime numbers of the specified size
 def get_prime_numbers(digits):
     digits = get_max(digits)
-    key1 = 2
-    while(is_prime(key1) == False):
+    key1 = 4
+    while(is_prime_max(key1) == False):
         key1 = random.randint(1,digits)
 
-    key2 = 2
-    while(is_prime(key2) == False):
+    key2 = 4
+    while(is_prime_max(key2) == False):
         key2 = random.randint(1,digits)
 
     return key1,key2
@@ -47,16 +42,9 @@ def get_factors(n):
 
 #Checks to see if the values are co_primes
 def is_coprime(value1,value2):
-    factors1 = get_factors(value1)
-    factors2 = get_factors(value2)
-    factors1.remove(1)
-    factors2.remove(1)
-    for spot in factors1:
-        for factor in factors2:
-            if(spot == factor):
-                return False
-
-    return True
+    if(gcd(value1,value2) == 1):
+        return True
+    return False
 
 #Gets a valid value for e, which needs to be co_prime to the totient of p, q
 def get_e(key1,key2):
@@ -68,19 +56,19 @@ def get_e(key1,key2):
 
 #Calculates the inverse modulo of a to m
 def invereMod(a,m):
-    for i in range(1,m):
-        if(m*i + 1) % a ==0:
-            return (m*i +1) //a
-    return None
+    return inverse_mod(a,m)
 
 #Gets all of the values to their correct spots in the process
 def make_key_set(digits):
     key1, key2 = get_prime_numbers(digits)
+
     #key1 = 3
     #key2 = 11
-    print key1,key2
+    print "Primes: ", key1,key2
     n = modulus(key1,key2)
+    print "n: ", n
     e = get_e(key1,key2)
+    print "e: ",e
     #e = 7
     tot = totient(key1,key2)
     d = invereMod(e,tot)
@@ -89,23 +77,24 @@ def make_key_set(digits):
 
 #Given the public key, the function encrypts the value
 def encrypt(value, e,n):
-    return (value**e) % n
+    return pow(value,e,n)
+    #return (value**e) % n
 
 #Given the private key and modulus, it decrypts the value
 def decrypt(value,d,n):
     #print value ** d
-    return (value**d) % n
+    return pow(value,d,n)
+    #return (value**d) % n
 
 
 def main():
     M = 8
-    pub, pri = make_key_set(3)
+    pub, pri = make_key_set(300)
     C = encrypt(8,pub[0],pub[1])
     D = decrypt(C,pri[0],pri[1])
-    print C
-    print D
-     #print C, decrypt(C,13,33)
-
+    print "Encrypted Value: ", C
+    print "Decrypted value: ", D
+    #print is_prime_max(11)
 
     #C = encrypt(5,17,77)
     #print C
